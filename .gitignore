@@ -1,0 +1,8 @@
+.DS_Store
+.theos/
+packages/
+codex/CodexGenie27/.theos/
+codex/CodexGenie27/packages/
+codex/cache/
+codex/tmp/
+codex/tests/engine_regression

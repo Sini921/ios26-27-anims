@@ -1,0 +1,340 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>items</key>
+	<array>
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>footerText</key>
+			<string>Возвращает все переключатели и ползунки к значениям по умолчанию — как в iOS 27.</string>
+		</dict>
+		<dict>
+			<key>action</key>
+			<string>resetSettings</string>
+			<key>cell</key>
+			<string>PSButtonCell</string>
+			<key>label</key>
+			<string>Вернуть по умолчанию (iOS 27)</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>footerText</key>
+			<string>Главный выключатель. «Уменьшение движения» в Универсальном доступе тоже отключает анимации.</string>
+			<key>label</key>
+			<string>Твик</string>
+		</dict>
+		<dict>
+			<key>PostNotification</key>
+			<string>com.bazik1337.ios2627anims/changed</string>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<true/>
+			<key>defaults</key>
+			<string>com.bazik1337.ios2627anims</string>
+			<key>key</key>
+			<string>Enabled</string>
+			<key>label</key>
+			<string>Включено</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>footerText</key>
+			<string>Открытие и закрытие приложений как в iOS 27: пружины, «капля» и эффект джина. Если выключить «Открытие и закрытие», всё как в стоке.</string>
+			<key>label</key>
+			<string>Приложения</string>
+		</dict>
+		<dict>
+			<key>PostNotification</key>
+			<string>com.bazik1337.ios2627anims/changed</string>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<true/>
+			<key>defaults</key>
+			<string>com.bazik1337.ios2627anims</string>
+			<key>key</key>
+			<string>AppAnimations</string>
+			<key>label</key>
+			<string>Открытие и закрытие</string>
+		</dict>
+		<dict>
+			<key>PostNotification</key>
+			<string>com.bazik1337.ios2627anims/changed</string>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<true/>
+			<key>defaults</key>
+			<string>com.bazik1337.ios2627anims</string>
+			<key>key</key>
+			<string>Genie</string>
+			<key>label</key>
+			<string>Эффект джина</string>
+		</dict>
+		<dict>
+			<key>PostNotification</key>
+			<string>com.bazik1337.ios2627anims/changed</string>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<true/>
+			<key>defaults</key>
+			<string>com.bazik1337.ios2627anims</string>
+			<key>key</key>
+			<string>Droplet</string>
+			<key>label</key>
+			<string>Капля (круглые углы в начале)</string>
+		</dict>
+		<dict>
+			<key>PostNotification</key>
+			<string>com.bazik1337.ios2627anims/changed</string>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<true/>
+			<key>defaults</key>
+			<string>com.bazik1337.ios2627anims</string>
+			<key>key</key>
+			<string>GestureBounce</string>
+			<key>label</key>
+			<string>Отскок при свайпе домой</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>footerText</key>
+			<string>Время пружины открытия в секундах. Меньше = быстрее. iOS 27: 0.24.</string>
+			<key>label</key>
+			<string>Скорость открытия</string>
+		</dict>
+		<dict>
+			<key>PostNotification</key>
+			<string>com.bazik1337.ios2627anims/changed</string>
+			<key>cell</key>
+			<string>PSSliderCell</string>
+			<key>default</key>
+			<real>0.24</real>
+			<key>defaults</key>
+			<string>com.bazik1337.ios2627anims</string>
+			<key>key</key>
+			<string>OpenResponse</string>
+			<key>max</key>
+			<real>0.5</real>
+			<key>min</key>
+			<real>0.12</real>
+			<key>showValue</key>
+			<true/>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>footerText</key>
+			<string>Множитель скорости закрытия (и по тапу, и свайпом домой). Больше = быстрее. iOS 27: 1.0.</string>
+			<key>label</key>
+			<string>Скорость закрытия</string>
+		</dict>
+		<dict>
+			<key>PostNotification</key>
+			<string>com.bazik1337.ios2627anims/changed</string>
+			<key>cell</key>
+			<string>PSSliderCell</string>
+			<key>default</key>
+			<real>1.0</real>
+			<key>defaults</key>
+			<string>com.bazik1337.ios2627anims</string>
+			<key>key</key>
+			<string>CloseSpeed</string>
+			<key>max</key>
+			<real>2.0</real>
+			<key>min</key>
+			<real>0.5</real>
+			<key>showValue</key>
+			<true/>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>footerText</key>
+			<string>Насколько сильно изгибается окно. 0 = без изгиба, iOS 27: 1.0, больше = сильнее.</string>
+			<key>label</key>
+			<string>Сила джина</string>
+		</dict>
+		<dict>
+			<key>PostNotification</key>
+			<string>com.bazik1337.ios2627anims/changed</string>
+			<key>cell</key>
+			<string>PSSliderCell</string>
+			<key>default</key>
+			<real>1.0</real>
+			<key>defaults</key>
+			<string>com.bazik1337.ios2627anims</string>
+			<key>key</key>
+			<string>Intensity</string>
+			<key>max</key>
+			<real>2.0</real>
+			<key>min</key>
+			<real>0.0</real>
+			<key>showValue</key>
+			<true/>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>footerText</key>
+			<string>Анимация иконок рабочего стола из iOS 27, когда шторка опускается и поднимается. «Прозрачная шторка»: шторка выглядит как в iOS 27, без размытия и затемнения, иконки видны под ней. Работает независимо от анимации приложений.</string>
+			<key>label</key>
+			<string>Шторка уведомлений</string>
+		</dict>
+		<dict>
+			<key>PostNotification</key>
+			<string>com.bazik1337.ios2627anims/changed</string>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<true/>
+			<key>defaults</key>
+			<string>com.bazik1337.ios2627anims</string>
+			<key>key</key>
+			<string>IconFlyIn</string>
+			<key>label</key>
+			<string>Анимация шторки</string>
+		</dict>
+		<dict>
+			<key>PostNotification</key>
+			<string>com.bazik1337.ios2627anims/changed</string>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<true/>
+			<key>defaults</key>
+			<string>com.bazik1337.ios2627anims</string>
+			<key>key</key>
+			<string>ClearSheet</string>
+			<key>label</key>
+			<string>Прозрачная шторка</string>
+		</dict>
+		<dict>
+			<key>PostNotification</key>
+			<string>com.bazik1337.ios2627anims/changed</string>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<true/>
+			<key>defaults</key>
+			<string>com.bazik1337.ios2627anims</string>
+			<key>key</key>
+			<string>FlyBlur</string>
+			<key>label</key>
+			<string>Размытие иконок при разлёте</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>footerText</key>
+			<string>Насколько далеко и заметно иконки разлетаются и сходятся на места. 0 = только из глубины, без разлёта; iOS 27: 1.0; больше = сильнее и медленнее.</string>
+			<key>label</key>
+			<string>Сила разлёта иконок</string>
+		</dict>
+		<dict>
+			<key>PostNotification</key>
+			<string>com.bazik1337.ios2627anims/changed</string>
+			<key>cell</key>
+			<string>PSSliderCell</string>
+			<key>default</key>
+			<real>1.0</real>
+			<key>defaults</key>
+			<string>com.bazik1337.ios2627anims</string>
+			<key>key</key>
+			<string>FlyStrength</string>
+			<key>max</key>
+			<real>3.0</real>
+			<key>min</key>
+			<real>0.0</real>
+			<key>showValue</key>
+			<true/>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>footerText</key>
+			<string>«Замедление твика» замедляет только анимации твика (только открытие iOS 27 и джин). 1 = обычная скорость.</string>
+			<key>label</key>
+			<string>Замедление твика</string>
+		</dict>
+		<dict>
+			<key>PostNotification</key>
+			<string>com.bazik1337.ios2627anims/changed</string>
+			<key>cell</key>
+			<string>PSSliderCell</string>
+			<key>default</key>
+			<real>1.0</real>
+			<key>defaults</key>
+			<string>com.bazik1337.ios2627anims</string>
+			<key>key</key>
+			<string>SlowFactor</string>
+			<key>max</key>
+			<real>10.0</real>
+			<key>min</key>
+			<real>1.0</real>
+			<key>showValue</key>
+			<true/>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>footerText</key>
+			<string>Замедляет все анимации SpringBoard одинаково: открытие и закрытие (и стоковое, и iOS 27), шторку. Удобно для проверки. 1 = обычная скорость.</string>
+			<key>label</key>
+			<string>Замедление всех анимаций</string>
+		</dict>
+		<dict>
+			<key>PostNotification</key>
+			<string>com.bazik1337.ios2627anims/changed</string>
+			<key>cell</key>
+			<string>PSSliderCell</string>
+			<key>default</key>
+			<real>1.0</real>
+			<key>defaults</key>
+			<string>com.bazik1337.ios2627anims</string>
+			<key>key</key>
+			<string>GlobalSlow</string>
+			<key>max</key>
+			<real>5.0</real>
+			<key>min</key>
+			<real>1.0</real>
+			<key>showValue</key>
+			<true/>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>footerText</key>
+			<string>Изменения применяются сразу, без респринга.
+Автор: bazik1337 (@bazik1337)</string>
+		</dict>
+		<dict>
+			<key>action</key>
+			<string>respring</string>
+			<key>cell</key>
+			<string>PSButtonCell</string>
+			<key>label</key>
+			<string>Респринг</string>
+		</dict>
+		<dict>
+			<key>action</key>
+			<string>openChannel</string>
+			<key>cell</key>
+			<string>PSButtonCell</string>
+			<key>label</key>
+			<string>Канал в Telegram</string>
+		</dict>
+	</array>
+	<key>title</key>
+	<string>iOS 27 Animations</string>
+</dict>
+</plist>
