@@ -1,0 +1,13 @@
+Package: com.bazik1337.ios2627anims
+Name: iOS 27 Animations
+Version: 1.5.4
+Architecture: iphoneos-arm
+Description: iOS 27 app open/close animations with the genie effect, and the Notification Center icon fly-in.
+Maintainer: bazik1337
+Author: bazik1337 (@bazik1337)
+Homepage: https://t.me/ba31k_tweaks
+Section: Tweaks
+Depends: mobilesubstrate, preferenceloader, firmware (>= 15.0)
+Conflicts: com.bazik.codexgenie27, com.bazik.genie27
+Replaces: com.bazik.codexgenie27
+Icon: https://repo.ba31k.com/CydiaIcon.png

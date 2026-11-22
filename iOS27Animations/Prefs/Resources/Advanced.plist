@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>items</key>
+	<array>
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>label</key>
+			<string>Window bend</string>
+		</dict>
+		<dict>
+			<key>PostNotification</key>
+			<string>com.bazik1337.ios2627anims/changed</string>
+			<key>cell</key>
+			<string>PSSliderCell</string>
+			<key>default</key>
+			<real>1.0</real>
+			<key>defaults</key>
+			<string>com.bazik1337.ios2627anims</string>
+			<key>key</key>
+			<string>Intensity</string>
+			<key>max</key>
+			<real>2.0</real>
+			<key>min</key>
+			<real>0.0</real>
+			<key>showValue</key>
+			<true/>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+		</dict>
+		<dict>
+			<key>PostNotification</key>
+			<string>com.bazik1337.ios2627anims/changed</string>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<true/>
+			<key>defaults</key>
+			<string>com.bazik1337.ios2627anims</string>
+			<key>key</key>
+			<string>GestureBounce</string>
+			<key>label</key>
+			<string>Bounce into icon</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>label</key>
+			<string>Icon fly-in distance</string>
+		</dict>
+		<dict>
+			<key>PostNotification</key>
+			<string>com.bazik1337.ios2627anims/changed</string>
+			<key>cell</key>
+			<string>PSSliderCell</string>
+			<key>default</key>
+			<real>1.0</real>
+			<key>defaults</key>
+			<string>com.bazik1337.ios2627anims</string>
+			<key>key</key>
+			<string>FlyStrength</string>
+			<key>max</key>
+			<real>3.0</real>
+			<key>min</key>
+			<real>0.0</real>
+			<key>showValue</key>
+			<true/>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>label</key>
+			<string>Slow motion</string>
+		</dict>
+		<dict>
+			<key>PostNotification</key>
+			<string>com.bazik1337.ios2627anims/changed</string>
+			<key>cell</key>
+			<string>PSSliderCell</string>
+			<key>default</key>
+			<real>1.0</real>
+			<key>defaults</key>
+			<string>com.bazik1337.ios2627anims</string>
+			<key>key</key>
+			<string>GlobalSlow</string>
+			<key>max</key>
+			<real>5.0</real>
+			<key>min</key>
+			<real>1.0</real>
+			<key>showValue</key>
+			<true/>
+		</dict>
+	</array>
+	<key>title</key>
+	<string>Advanced</string>
+</dict>
+</plist>
