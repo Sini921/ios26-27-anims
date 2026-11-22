@@ -19,4 +19,15 @@
 <img src="docs/screenshots/advanced.png" width="260">
 </p>
 
+## Сурсы
+
+- `iOS27Animations` 1.5.4
+- `iOS27AnimationsReborn` 1.0.0 Beta 1
+
+```sh
+make -C iOS27Animations package FINALPACKAGE=1
+```
+
+Для rootful добавь `THEOS_PACKAGE_SCHEME=`.
+
 Обновления — в канале [@ba31k_tweaks](https://t.me/ba31k_tweaks). Автор — [@bazik1337](https://t.me/bazik1337).
