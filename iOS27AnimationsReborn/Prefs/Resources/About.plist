@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>title</key>
+	<string>About</string>
+	<key>items</key>
+	<array>
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>label</key>
+			<string>Author</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSButtonCell</string>
+			<key>label</key>
+			<string>@bazik1337</string>
+			<key>action</key>
+			<string>openTelegram</string>
+			<key>iconSymbol</key>
+			<string>person.crop.circle</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSButtonCell</string>
+			<key>label</key>
+			<string>Telegram channel</string>
+			<key>action</key>
+			<string>openChannel</string>
+			<key>iconSymbol</key>
+			<string>paperplane</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSButtonCell</string>
+			<key>label</key>
+			<string>GitHub</string>
+			<key>action</key>
+			<string>openGitHub</string>
+			<key>iconSymbol</key>
+			<string>chevron.left.forwardslash.chevron.right</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>label</key>
+			<string>Maintenance</string>
+			<key>footerText</key>
+			<string>Settings apply immediately. Respring only if SpringBoard needs to be restarted.</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSButtonCell</string>
+			<key>label</key>
+			<string>Respring</string>
+			<key>action</key>
+			<string>respring</string>
+			<key>iconSymbol</key>
+			<string>arrow.clockwise</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>footerText</key>
+			<string>version</string>
+		</dict>
+	</array>
+</dict>
+</plist>

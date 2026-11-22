@@ -1,0 +1,14 @@
+Package: com.bazik1337.ios27animsreborn
+Name: iOS 27 Animations Reborn
+Version: 1.0.0~beta1
+Architecture: iphoneos-arm
+Description: Reborn beta: genie app transitions, widget animations and Notification Center.
+Maintainer: bazik1337 <https://t.me/bazik1337>
+Author: bazik1337 <https://t.me/bazik1337>
+Homepage: https://t.me/ba31k_tweaks
+Section: Tweaks
+Depends: mobilesubstrate, preferenceloader
+Conflicts: com.bazik1337.ios2627anims, com.bazik.codexgenie27, com.bazik.genie27
+Icon: https://repo.ba31k.com/depictions/com.bazik1337.ios27animsreborn/icon.png
+Depiction: https://repo.ba31k.com/depictions/com.bazik1337.ios27animsreborn/
+SileoDepiction: https://repo.ba31k.com/depictions/com.bazik1337.ios27animsreborn/depiction.json

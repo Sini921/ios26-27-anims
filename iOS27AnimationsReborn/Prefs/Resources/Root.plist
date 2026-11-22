@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>title</key>
+	<string>iOS 27 Animations Reborn</string>
+	<key>items</key>
+	<array>
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>footerText</key>
+			<string>Changes apply without a respring.</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>key</key>
+			<string>Enabled</string>
+			<key>label</key>
+			<string>Enabled</string>
+			<key>default</key>
+			<false/>
+			<key>defaults</key>
+			<string>com.bazik1337.ios27animsreborn</string>
+			<key>PostNotification</key>
+			<string>com.bazik1337.ios27animsreborn/changed</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>label</key>
+			<string>Apps</string>
+			<key>footerText</key>
+			<string>Opening and closing apps with the genie effect.</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>key</key>
+			<string>AppAnimations</string>
+			<key>label</key>
+			<string>iOS 27 animations</string>
+			<key>default</key>
+			<true/>
+			<key>defaults</key>
+			<string>com.bazik1337.ios27animsreborn</string>
+			<key>PostNotification</key>
+			<string>com.bazik1337.ios27animsreborn/changed</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>footerText</key>
+			<string>On: use your iOS wallpaper zoom. Off: keep the wallpaper still, as in iOS 27. Applies to app animations.</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>key</key>
+			<string>NativeWallpaperZoom</string>
+			<key>label</key>
+			<string>System wallpaper zoom</string>
+			<key>default</key>
+			<false/>
+			<key>defaults</key>
+			<string>com.bazik1337.ios27animsreborn</string>
+			<key>PostNotification</key>
+			<string>com.bazik1337.ios27animsreborn/changed</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>label</key>
+			<string>Notification Center</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>key</key>
+			<string>IconFlyIn</string>
+			<key>label</key>
+			<string>Icon animations</string>
+			<key>default</key>
+			<true/>
+			<key>defaults</key>
+			<string>com.bazik1337.ios27animsreborn</string>
+			<key>PostNotification</key>
+			<string>com.bazik1337.ios27animsreborn/changed</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>key</key>
+			<string>ClearSheet</string>
+			<key>label</key>
+			<string>Transparent background</string>
+			<key>default</key>
+			<true/>
+			<key>defaults</key>
+			<string>com.bazik1337.ios27animsreborn</string>
+			<key>PostNotification</key>
+			<string>com.bazik1337.ios27animsreborn/changed</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSButtonCell</string>
+			<key>label</key>
+			<string>Restore recommended settings</string>
+			<key>action</key>
+			<string>resetSettings</string>
+			<key>iconSymbol</key>
+			<string>arrow.counterclockwise</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSLinkCell</string>
+			<key>label</key>
+			<string>About</string>
+			<key>detail</key>
+			<string>CG27RebornAboutController</string>
+			<key>isController</key>
+			<true/>
+			<key>plist</key>
+			<string>About</string>
+			<key>iconSymbol</key>
+			<string>info.circle</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>footerText</key>
+			<string>version</string>
+		</dict>
+	</array>
+</dict>
+</plist>
