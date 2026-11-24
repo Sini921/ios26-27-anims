@@ -2,8 +2,14 @@
 #import <objc/runtime.h>
 #import <objc/message.h>
 #include <sys/stat.h>
+#include <os/lock.h>
 #include "SpringMath.h"
 #include "GenieEngine.h"
+#include "../shared/HookCompatibility.h"
+#if defined(DEBUG) && DEBUG
+#define CG27_STARTUP_LOG "/var/mobile/Library/Logs/27anims-main-startup.log"
+#endif
+#include "../shared/AfterLaunch.h"
 
 @interface SBFFluidBehaviorSettings : NSObject <NSCopying>
 @property (nonatomic) double dampingRatio;
@@ -77,16 +83,17 @@ typedef struct { unsigned int indices[4]; float w[4]; } CG27MeshFace;
 - (void)setMeshTransform:(id)mesh;
 @end
 
-typedef struct { double topLeft, bottomLeft, bottomRight, topRight; } CG27CornerRadii;
-
 extern float UIAnimationDragCoefficient(void);
 
 static volatile double gCG27GlobalSlow = 1.0;
 
 static double gCG27PrefsLoaded = -1;
+static os_unfair_lock gCG27PrefsLock = OS_UNFAIR_LOCK_INIT;
+static BOOL gCG27RuntimeReady;
 
 static CFPropertyListRef CG27CopyPref(CFStringRef key) {
     static CFMutableDictionaryRef cache;
+    os_unfair_lock_lock(&gCG27PrefsLock);
     double now = CACurrentMediaTime();
     if (!cache) cache = CFDictionaryCreateMutable(NULL, 0, &kCFTypeDictionaryKeyCallBacks, &kCFTypeDictionaryValueCallBacks);
     if (gCG27PrefsLoaded < 0 || now - gCG27PrefsLoaded > 0.5) { CFDictionaryRemoveAllValues(cache); gCG27PrefsLoaded = now; }
@@ -97,7 +104,9 @@ static CFPropertyListRef CG27CopyPref(CFStringRef key) {
         if (v) CFRelease(v);
         v = CFDictionaryGetValue(cache, key);
     }
-    return v == (CFPropertyListRef)kCFNull ? NULL : CFRetain(v);
+    CFPropertyListRef result = v == (CFPropertyListRef)kCFNull ? NULL : CFRetain(v);
+    os_unfair_lock_unlock(&gCG27PrefsLock);
+    return result;
 }
 
 static BOOL CG27BoolPref(CFStringRef key, BOOL fallback) {
@@ -109,6 +118,7 @@ static BOOL CG27BoolPref(CFStringRef key, BOOL fallback) {
 }
 
 static BOOL CG27Enabled(void) {
+    if (!gCG27RuntimeReady || !NSThread.isMainThread) return NO;
     if (UIAccessibilityIsReduceMotionEnabled()) return NO;
     return CG27BoolPref(CFSTR("Enabled"), NO);
 }
@@ -1442,6 +1452,12 @@ static void CG27SheetSync(id parent) {
 }
 %end
 
+static void CG27CoverSheetDidEnd(id manager) {
+    BOOL presented = [manager respondsToSelector:@selector(isPresented)] && ((BOOL (*)(id, SEL))objc_msgSend)(manager, @selector(isPresented));
+    gCG27SheetSettledShown = presented;
+    if (gCG27FlyHidden && (!presented || !CG27FlyHomeVisible())) CG27FlySetHidden(NO);
+}
+
 %hook SBCoverSheetPresentationManager
 - (void)coverSheetSlidingViewController:(id)controller prepareForPresentationTransitionForUserGesture:(BOOL)gesture {
     %orig;
@@ -1471,10 +1487,14 @@ static void CG27SheetSync(id parent) {
 
 - (void)coverSheetSlidingViewControllerDidEndTransition:(id)controller {
     %orig;
-    id manager = (id)self;
-    BOOL presented = [manager respondsToSelector:@selector(isPresented)] && ((BOOL (*)(id, SEL))objc_msgSend)(manager, @selector(isPresented));
-    gCG27SheetSettledShown = presented;
-    if (gCG27FlyHidden && (!presented || !CG27FlyHomeVisible())) CG27FlySetHidden(NO);
+    CG27CoverSheetDidEnd(self);
+}
+
+- (void)_cleanupATransition {
+    %orig;
+    // iOS 15 has this cleanup method instead of the newer delegate callback.
+    if (@available(iOS 16.0, *)) return;
+    CG27CoverSheetDidEnd(self);
 }
 %end
 
@@ -1527,11 +1547,14 @@ static NSString *const kCG27PrefsChanged = @"com.bazik1337.ios2627anims/changed"
 
 static void CG27PrefsChanged(__unused CFNotificationCenterRef center, __unused void *observer, __unused CFStringRef name,
                              __unused const void *object, __unused CFDictionaryRef info) {
-    CFPreferencesAppSynchronize(CFSTR("com.bazik1337.ios2627anims"));
     dispatch_async(dispatch_get_main_queue(), ^{
+        if (!gCG27RuntimeReady) return;
+        CFPreferencesAppSynchronize(CFSTR("com.bazik1337.ios2627anims"));
+        os_unfair_lock_lock(&gCG27PrefsLock);
         gCG27PrefsLoaded = -1;
+        os_unfair_lock_unlock(&gCG27PrefsLock);
         gCG27GlobalSlow = CG27DoublePref(CFSTR("GlobalSlow"), 1.0, 1.0, 10.0);
-        NSMutableSet *all = [NSMutableSet setWithArray:gCG27AppliedSettings.allObjects];
+        NSMutableSet *all = [NSMutableSet setWithArray:gCG27AppliedSettings.allObjects ?: @[]];
         id animation = CG27AnimationSettings();
         if (animation) [all addObject:animation];
         [gCG27AppliedSettings removeAllObjects];
@@ -1549,13 +1572,31 @@ static void CG27PrefsChanged(__unused CFNotificationCenterRef center, __unused v
     return k > 1.001 ? (float)(drag * k) : drag;
 }
 
-%ctor {
+static void CG27InstallHooks(void) {
+    CG27StartupTrace("feature hooks begin");
     %init;
+    CG27StartupTrace("feature hooks installed");
+    gCG27RuntimeReady = YES;
     gCG27GlobalSlow = CG27DoublePref(CFSTR("GlobalSlow"), 1.0, 1.0, 10.0);
     CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), NULL, CG27PrefsChanged,
                                     (__bridge CFStringRef)kCG27PrefsChanged, NULL,
                                     CFNotificationSuspensionBehaviorDeliverImmediately);
-    dispatch_async(dispatch_get_main_queue(), ^{
-        CG27ApplyIOS27Settings(CG27AnimationSettings());
-    });
+    CG27ApplyIOS27Settings(CG27AnimationSettings());
+    CG27StartupTrace("ready");
+}
+
+%group CG27Startup
+%hook SpringBoard
+- (void)applicationDidFinishLaunching:(id)application {
+    %orig;
+    CG27StartupTrace("SpringBoard launch callback finished");
+    CG27AfterLaunch(^{ CG27InstallHooks(); });
+}
+%end
+%end
+
+%ctor {
+    CG27StartupTrace("constructor entered");
+    %init(CG27Startup);
+    CG27StartupTrace("launch hook installed");
 }

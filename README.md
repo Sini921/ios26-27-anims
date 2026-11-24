@@ -21,11 +21,12 @@
 
 ## Сурсы
 
-- `iOS27Animations` 1.5.4
-- `iOS27AnimationsReborn` 1.0.0 Beta 1
+- `iOS27Animations` 1.5.5
+- `iOS27AnimationsReborn` 1.0.0 Beta 2
 
 ```sh
 make -C iOS27Animations package FINALPACKAGE=1
+make -C iOS27AnimationsReborn package FINALPACKAGE=1
 ```
 
 Для rootful добавь `THEOS_PACKAGE_SCHEME=`.

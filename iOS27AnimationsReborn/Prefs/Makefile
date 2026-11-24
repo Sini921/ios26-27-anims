@@ -6,5 +6,5 @@ iOS27AnimsRebornPrefs_FILES = CG27RebornRootListController.m
 iOS27AnimsRebornPrefs_INSTALL_PATH = /Library/PreferenceBundles
 iOS27AnimsRebornPrefs_FRAMEWORKS = UIKit
 iOS27AnimsRebornPrefs_PRIVATE_FRAMEWORKS = Preferences
-iOS27AnimsRebornPrefs_CFLAGS = -fobjc-arc -Wall -Wextra
+iOS27AnimsRebornPrefs_CFLAGS = -fobjc-arc -Wall -Wextra -fno-ptrauth-objc-class-ro
 include $(THEOS_MAKE_PATH)/bundle.mk

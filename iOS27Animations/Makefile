@@ -5,7 +5,8 @@ INSTALL_TARGET_PROCESSES = SpringBoard
 include $(THEOS)/makefiles/common.mk
 TWEAK_NAME = iOS2627Anims
 iOS2627Anims_FILES = Tweak.x
-iOS2627Anims_CFLAGS = -fobjc-arc -Wall -Wextra
+# Older libobjc runtimes cannot load signed class_ro pointers from new clang.
+iOS2627Anims_CFLAGS = -fobjc-arc -Wall -Wextra -fno-ptrauth-objc-class-ro
 iOS2627Anims_FRAMEWORKS = UIKit QuartzCore CoreGraphics
 include $(THEOS_MAKE_PATH)/tweak.mk
 SUBPROJECTS += Prefs

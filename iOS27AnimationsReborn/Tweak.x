@@ -5,6 +5,11 @@
 #include <os/lock.h>
 #include "SpringMath.h"
 #include "GenieEngine.h"
+#include "../shared/HookCompatibility.h"
+#if defined(DEBUG) && DEBUG
+#define CG27_STARTUP_LOG "/var/mobile/Library/Logs/27anims-reborn-startup.log"
+#endif
+#include "../shared/AfterLaunch.h"
 
 @interface SBFFluidBehaviorSettings : NSObject <NSCopying>
 @property (nonatomic) double dampingRatio;
@@ -108,7 +113,6 @@ typedef struct { unsigned int indices[4]; float w[4]; } CG27MeshFace;
 - (instancetype)initWithDefaultValues;
 @end
 
-typedef struct { double topLeft, bottomLeft, bottomRight, topRight; } CG27CornerRadii;
 @interface SBFullScreenToHomeIconZoomSwitcherModifier (CG27Radii)
 - (CG27CornerRadii)cornerRadiiForIndex:(NSUInteger)index;
 @end
@@ -116,9 +120,12 @@ typedef struct { double topLeft, bottomLeft, bottomRight, topRight; } CG27Corner
 extern float UIAnimationDragCoefficient(void);
 
 static double gCG27PrefsLoaded = -1;
+static os_unfair_lock gCG27PrefsLock = OS_UNFAIR_LOCK_INIT;
+static BOOL gCG27RuntimeReady;
 
 static CFPropertyListRef CG27CopyPref(CFStringRef key) {
     static CFMutableDictionaryRef cache;
+    os_unfair_lock_lock(&gCG27PrefsLock);
     double now = CACurrentMediaTime();
     if (!cache) cache = CFDictionaryCreateMutable(NULL, 0, &kCFTypeDictionaryKeyCallBacks, &kCFTypeDictionaryValueCallBacks);
     if (gCG27PrefsLoaded < 0 || now - gCG27PrefsLoaded > 0.5) { CFDictionaryRemoveAllValues(cache); gCG27PrefsLoaded = now; }
@@ -129,7 +136,9 @@ static CFPropertyListRef CG27CopyPref(CFStringRef key) {
         if (v) CFRelease(v);
         v = CFDictionaryGetValue(cache, key);
     }
-    return v == (CFPropertyListRef)kCFNull ? NULL : CFRetain(v);
+    CFPropertyListRef result = v == (CFPropertyListRef)kCFNull ? NULL : CFRetain(v);
+    os_unfair_lock_unlock(&gCG27PrefsLock);
+    return result;
 }
 
 static BOOL CG27BoolPref(CFStringRef key, BOOL fallback) {
@@ -141,6 +150,7 @@ static BOOL CG27BoolPref(CFStringRef key, BOOL fallback) {
 }
 
 static BOOL CG27Enabled(void) {
+    if (!gCG27RuntimeReady || !NSThread.isMainThread) return NO;
     if (UIAccessibilityIsReduceMotionEnabled()) return NO;
     return CG27BoolPref(CFSTR("Enabled"), NO);
 }
@@ -527,11 +537,16 @@ static double CG27BoundsProgress(CGSize size) {
 }
 
 static BOOL CG27NativeGenieEnabled(void) {
-    return %c(UIViewFloatAnimatableProperty) &&
-        [UIView respondsToSelector:@selector(_createTransformerWithInputAnimatableProperties:modelValueSetter:presentationValueSetter:)] &&
-        [UIView instancesRespondToSelector:@selector(_setPresentationValue:forKey:)] &&
-        [UIView respondsToSelector:@selector(sb_animateWithSettings:mode:animations:completion:)] &&
-        [%c(SBFFluidBehaviorSettings) instancesRespondToSelector:@selector(initWithDefaultValues)];
+    // The in-process path was developed against iOS 16. Keep the existing
+    // display-link mesh driver on iOS 15, even if some private selectors exist.
+    if (@available(iOS 16.0, *)) {
+        return %c(UIViewFloatAnimatableProperty) &&
+            [UIView respondsToSelector:@selector(_createTransformerWithInputAnimatableProperties:modelValueSetter:presentationValueSetter:)] &&
+            [UIView instancesRespondToSelector:@selector(_setPresentationValue:forKey:)] &&
+            [UIView respondsToSelector:@selector(sb_animateWithSettings:mode:animations:completion:)] &&
+            [%c(SBFFluidBehaviorSettings) instancesRespondToSelector:@selector(initWithDefaultValues)];
+    }
+    return NO;
 }
 
 static const void *kCG27NativeMeshOwnerKey = &kCG27NativeMeshOwnerKey;
@@ -2390,6 +2405,12 @@ static BOOL CG27SheetTargetPortrait(void) {
 }
 %end
 
+static void CG27CoverSheetDidEnd(id manager) {
+    BOOL presented = [manager respondsToSelector:@selector(isPresented)] && ((BOOL (*)(id, SEL))objc_msgSend)(manager, @selector(isPresented));
+    gCG27SheetSettledShown = presented;
+    if (gCG27FlyHidden && (!presented || !CG27FlyHomeVisible())) CG27FlySetHidden(NO);
+}
+
 %hook SBCoverSheetPresentationManager
 - (void)coverSheetSlidingViewController:(id)controller prepareForPresentationTransitionForUserGesture:(BOOL)gesture {
     %orig;
@@ -2419,10 +2440,14 @@ static BOOL CG27SheetTargetPortrait(void) {
 
 - (void)coverSheetSlidingViewControllerDidEndTransition:(id)controller {
     %orig;
-    id manager = (id)self;
-    BOOL presented = [manager respondsToSelector:@selector(isPresented)] && ((BOOL (*)(id, SEL))objc_msgSend)(manager, @selector(isPresented));
-    gCG27SheetSettledShown = presented;
-    if (gCG27FlyHidden && (!presented || !CG27FlyHomeVisible())) CG27FlySetHidden(NO);
+    CG27CoverSheetDidEnd(self);
+}
+
+- (void)_cleanupATransition {
+    %orig;
+    // iOS 15 has this cleanup method instead of the newer delegate callback.
+    if (@available(iOS 16.0, *)) return;
+    CG27CoverSheetDidEnd(self);
 }
 %end
 
@@ -2537,10 +2562,13 @@ static NSString *const kCG27PrefsChanged = @"com.bazik1337.ios27animsreborn/chan
 
 static void CG27PrefsChanged(__unused CFNotificationCenterRef center, __unused void *observer, __unused CFStringRef name,
                              __unused const void *object, __unused CFDictionaryRef info) {
-    CFPreferencesAppSynchronize(CFSTR("com.bazik1337.ios27animsreborn"));
     dispatch_async(dispatch_get_main_queue(), ^{
+        if (!gCG27RuntimeReady) return;
+        CFPreferencesAppSynchronize(CFSTR("com.bazik1337.ios27animsreborn"));
+        os_unfair_lock_lock(&gCG27PrefsLock);
         gCG27PrefsLoaded = -1;
-        NSMutableSet *all = [NSMutableSet setWithArray:gCG27AppliedSettings.allObjects];
+        os_unfair_lock_unlock(&gCG27PrefsLock);
+        NSMutableSet *all = [NSMutableSet setWithArray:gCG27AppliedSettings.allObjects ?: @[]];
         id animation = CG27AnimationSettings();
         if (animation) [all addObject:animation];
         [gCG27AppliedSettings removeAllObjects];
@@ -2552,12 +2580,30 @@ static void CG27PrefsChanged(__unused CFNotificationCenterRef center, __unused v
     });
 }
 
-%ctor {
+static void CG27InstallHooks(void) {
+    CG27StartupTrace("feature hooks begin");
     %init;
+    CG27StartupTrace("feature hooks installed");
+    gCG27RuntimeReady = YES;
     CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), NULL, CG27PrefsChanged,
                                     (__bridge CFStringRef)kCG27PrefsChanged, NULL,
                                     CFNotificationSuspensionBehaviorDeliverImmediately);
-    dispatch_async(dispatch_get_main_queue(), ^{
-        CG27ApplyIOS27Settings(CG27AnimationSettings());
-    });
+    CG27ApplyIOS27Settings(CG27AnimationSettings());
+    CG27StartupTrace("ready");
+}
+
+%group CG27Startup
+%hook SpringBoard
+- (void)applicationDidFinishLaunching:(id)application {
+    %orig;
+    CG27StartupTrace("SpringBoard launch callback finished");
+    CG27AfterLaunch(^{ CG27InstallHooks(); });
+}
+%end
+%end
+
+%ctor {
+    CG27StartupTrace("constructor entered");
+    %init(CG27Startup);
+    CG27StartupTrace("launch hook installed");
 }

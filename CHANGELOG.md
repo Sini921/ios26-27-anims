@@ -1,5 +1,11 @@
 # История изменений
 
+## 1.5.5 / Reborn 1.0.0 Beta 2
+
+- fixed crash on ios 15
+- fixed notification center cleanup on ios 15
+- tested on iphone 13 pro max ios 15.0.2
+
 ## 1.5.4
 
 - Иконка при закрытии садится точно на место иконки SnowBoard и больше не дёргается, когда её подменяет иконка рабочего стола.
